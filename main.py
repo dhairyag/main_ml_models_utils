@@ -68,10 +68,10 @@ def Model(t_name='resnet'):
 criterion = nn.CrossEntropyLoss()
 
 
-train_losses = [1, 2]
-test_losses = [1, 2]
-train_acc = [1, 2]
-test_acc = [1, 2]
+train_losses = []
+test_losses = []
+train_acc = []
+test_acc = []
 
 test_incorrect_pred = {'images': [], 'ground_truths': [], 'predicted_vals': []}
 
