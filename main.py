@@ -135,7 +135,7 @@ def test(model, device, test_loader, criterion):
         100. * correct / len(test_loader.dataset)))
 
 def Train(model):
-    for epoch in range(1, 2+1):
+    for epoch in range(1, 20+1):
         print(f'Epoch {epoch}')
         train(model, device, trainloader, optimizer, criterion)
         test(model, device, testloader, criterion)
