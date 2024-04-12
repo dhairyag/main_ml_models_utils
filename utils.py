@@ -63,9 +63,16 @@ def misclassified_10(model):
     # Plot the misclassified images
     plt.figure(figsize=(13, 13))
     plt.suptitle("Misclassified Images", fontsize=14)
+    
+    dataset_mean = [0.49139968, 0.48215827 ,0.44653124] 
+    dataset_std = [0.24703233, 0.24348505, 0.26158768]
 
     for i in range(10):
         plt.subplot(5, 2, i + 1)
+        
+        for j in range(misclassified_images[i].shape[0]):
+            misclassified_images[i][j] = (misclassified_images[i][j]*dataset_std[j])+dataset_mean[j]
+        
         plt.imshow(np.transpose(misclassified_images[i].cpu().numpy(), (1, 2, 0)))
         mis_lab = misclassified_labels[i].item()
         act_lab = actual_labels[i].item()
