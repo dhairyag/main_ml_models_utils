@@ -16,7 +16,7 @@ import numpy as np
 
 def plot_loss():
     from main import train_losses, test_losses
-    fig, axs = plt.subplots(1,2,figsize=(15,10))
+    fig, axs = plt.subplots(1,2,figsize=(10,10))
     axs[0].plot(train_losses)
     axs[0].set_title("Training Loss")
     axs[1].plot(test_losses)
@@ -25,12 +25,15 @@ def plot_loss():
 
 def plot_accuracy():
     from main import train_acc, test_acc
-    fig, axs = plt.subplots(1,2,figsize=(15,10))
+    fig, axs = plt.subplots(1,2,figsize=(10,10))
     axs[0].plot(train_acc)
     axs[0].set_title("Training Accuracy")
     axs[1].plot(test_acc)
     axs[1].set_title("Test Accuracy")
     plt.show()
+
+
+
 
 def misclassified_10(model):
     # Set the model to evaluation mode

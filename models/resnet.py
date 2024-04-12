@@ -59,16 +59,29 @@ class ResNet(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
+        #print('in l1 ', out.size())
         out = self.layer1(out)
+        #print('in l2 ', out.size())
         out = self.layer2(out)
+        #print('in l3 ', out.size())
         out = self.layer3(out)
+        #print('in l4 ', out.size())
         out = self.layer4(out)
+        #print('in avep ', out.size())
         out = F.avg_pool2d(out, 4)
+        #print('in view ', out.size())
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
 
-
+'''
+in l1  torch.Size([128, 64, 32, 32])
+in l2  torch.Size([128, 64, 32, 32])
+in l3  torch.Size([128, 128, 16, 16])
+in l4  torch.Size([128, 256, 8, 8])
+in avep  torch.Size([128, 512, 4, 4])
+in view  torch.Size([128, 512, 1, 1])
+'''
 def ResNet18():
     return ResNet(BasicBlock, [2, 2, 2, 2])
 

@@ -15,9 +15,7 @@ import os
 from models import *
 
 from utils import progress_bar
-
-#from torchtoolbox.transform import Cutout
-#from utils import RandomCutout
+import cv2
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
@@ -57,7 +55,9 @@ dataset_mean = (255*0.49139968, 255*0.48215827 ,255*0.44653124)
 
 # Define Albumentations transformations
 train_transforms = A.Compose([
-    A.PadIfNeeded(min_height=40, min_width=40),  # Pad to (40, 40) if necessary
+    A.PadIfNeeded(min_height=40, min_width=40,
+                border_mode=cv2.BORDER_CONSTANT,
+                value=dataset_mean),  # Pad to (40, 40) if necessary
     A.RandomCrop(height=32, width=32, p=1),  # RandomCrop of size (32, 32)
     A.CoarseDropout(max_holes=1, max_height=16, max_width=16, min_holes=1, min_height=16, min_width=16,
                     fill_value=dataset_mean, p=0.5),  
@@ -183,7 +183,7 @@ def test(model, device, test_loader, criterion):
         100. * correct / len(test_loader.dataset)))
 
 def Train(model):
-    for epoch in range(1, 5+1):
+    for epoch in range(1, 20+1):
         print(f'Epoch {epoch}')
         train(model, device, trainloader, optimizer, criterion)
         test(model, device, testloader, criterion)
