@@ -17,7 +17,7 @@ from models import *
 from utils import progress_bar
 
 #from torchtoolbox.transform import Cutout
-from utils import RandomCutout
+#from utils import RandomCutout
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
