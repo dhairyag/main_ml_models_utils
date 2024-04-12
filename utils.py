@@ -35,7 +35,7 @@ def plot_accuracy():
 def misclassified_10(model):
     # Set the model to evaluation mode
     model.eval()
-    from main import testloader, device
+    from main import testloader, device, class_names
 
     # List to store misclassified images and actual labels
     misclassified_images = []

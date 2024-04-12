@@ -94,8 +94,8 @@ testloader = torch.utils.data.DataLoader(test_dataset, **kwargs)
 trainloader = torch.utils.data.DataLoader(train_dataset, **kwargs)
 ##############################
 
-classes = ('plane', 'car', 'bird', 'cat', 'deer',
-           'dog', 'frog', 'horse', 'ship', 'truck')
+class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+
 
 # Model
 def Model(t_name='resnet'):
