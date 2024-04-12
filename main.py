@@ -8,14 +8,16 @@ import torchvision
 import torchvision.transforms as transforms
 from tqdm import tqdm
 
+from torchvision import datasets
+
 import os
 
 from models import *
 
 from utils import progress_bar
 
-from torchtoolbox.transform import Cutout
-
+#from torchtoolbox.transform import Cutout
+from utils import RandomCutout
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
@@ -23,10 +25,11 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # Data
 print('==> Preparing data..')
+'''
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     #transforms.RandomHorizontalFlip(),
-    Cutout(),
+    RandomCutout(n_holes=1, length=16),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
@@ -45,6 +48,51 @@ testset = torchvision.datasets.CIFAR10(
     root='../data', train=False, download=True, transform=transform_test)
 testloader = torch.utils.data.DataLoader(
     testset, batch_size=512, shuffle=False, num_workers=2)
+'''
+import albumentations as A
+from albumentations.pytorch.transforms import ToTensorV2
+
+# Define mean of your dataset
+dataset_mean = (255*0.49139968, 255*0.48215827 ,255*0.44653124) 
+
+# Define Albumentations transformations
+train_transforms = A.Compose([
+    A.PadIfNeeded(min_height=40, min_width=40),  # Pad to (40, 40) if necessary
+    A.RandomCrop(height=32, width=32, p=1),  # RandomCrop of size (32, 32)
+    A.CoarseDropout(max_holes=1, max_height=16, max_width=16, min_holes=1, min_height=16, min_width=16,
+                    fill_value=dataset_mean, p=0.5),  
+    A.Normalize(mean=(0.49139968, 0.48215827, 0.44653124), std=(0.24703233, 0.24348505, 0.26158768)),
+    ToTensorV2(),  # Convert to PyTorch tensor
+])
+
+
+test_transforms = A.Compose([
+    A.ToFloat(max_value=255.0),  # Convert images to float format
+    ToTensorV2(),
+])
+# load data sets for training and testing
+
+# albu
+class Cifar10SearchDataset(datasets.CIFAR10):
+    def __init__(self, root="~/data/cifar10", train=True, download=True, transform=None):
+        super().__init__(root=root, train=train, download=download, transform=transform)
+    def __getitem__(self, index):
+        image, label = self.data[index], self.targets[index]
+        if self.transform is not None:
+            transformed = self.transform(image=image)
+            image = transformed["image"]
+        return image, label
+
+train_dataset = Cifar10SearchDataset(root='../data', train=True, download=True, transform=train_transforms)
+test_dataset = Cifar10SearchDataset(root='../data', train=False, download=True, transform=test_transforms)
+# batch size is the number of samples processed before the model is updated
+batch_size = 1024
+
+kwargs = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 2, 'pin_memory': True}
+
+testloader = torch.utils.data.DataLoader(test_dataset, **kwargs)
+trainloader = torch.utils.data.DataLoader(train_dataset, **kwargs)
+##############################
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer',
            'dog', 'frog', 'horse', 'ship', 'truck')

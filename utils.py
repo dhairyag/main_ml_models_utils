@@ -12,6 +12,7 @@ import torch.nn as nn
 import torch.nn.init as init
 import matplotlib.pyplot as plt
 import torch
+import numpy as np
 
 def plot_loss():
     from main import train_losses, test_losses
@@ -34,7 +35,7 @@ def plot_accuracy():
 def misclassified_10(model):
     # Set the model to evaluation mode
     model.eval()
-    from main import test_loader, device
+    from main import testloader, device
 
     # List to store misclassified images and actual labels
     misclassified_images = []
@@ -43,7 +44,7 @@ def misclassified_10(model):
 
     # Loop through the test dataset
     with torch.no_grad():
-        for images, labels in test_loader:
+        for images, labels in testloader:
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
@@ -185,3 +186,6 @@ def format_time(seconds):
     if f == '':
         f = '0ms'
     return f
+
+
+
