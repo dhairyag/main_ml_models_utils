@@ -57,7 +57,7 @@ def misclassified_10(model):
     misclassified_labels = torch.cat(misclassified_labels)
     actual_labels        = torch.cat(actual_labels)
     # Plot the misclassified images
-    plt.figure(figsize=(14, 14))
+    plt.figure(figsize=(13, 13))
     plt.suptitle("Misclassified Images", fontsize=14)
 
     for i in range(10):
@@ -65,7 +65,7 @@ def misclassified_10(model):
         plt.imshow(np.transpose(misclassified_images[i].cpu().numpy(), (1, 2, 0)))
         mis_lab = misclassified_labels[i].item()
         act_lab = actual_labels[i].item()
-        plt.title(f"Predicted: {class_names[mis_lab]}({mis_lab}),\n Actual: {class_names[act_lab]}({act_lab})", fontsize=11)
+        plt.title(f"Predicted: {class_names[mis_lab]}({mis_lab}),\n Actual: {class_names[act_lab]}({act_lab})", fontsize=10)
         plt.axis('off')
 
     plt.tight_layout()
